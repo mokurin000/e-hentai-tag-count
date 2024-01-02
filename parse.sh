@@ -6,7 +6,8 @@ fi
 
 output_file=gid_tid.csv
 
-gzip -d -c "$1" |
+echo processing gid-tid...
+zcat "$1" |
   grep -E '^\(.*\)[,;]$' |
   tr -cd '[0-9] \n' |
   grep -v '^$' |
@@ -14,14 +15,23 @@ gzip -d -c "$1" |
   sort -n -r |
   uniq -c |
   sed 's/^\s*//g;s/ /,/' |
-  sort -n -r |
-  awk -F, '{ print $2 "," $1 }' > tid_count.csv
+  awk -F, '{ print $2 "," $1 }'
+  sort -n | > tid_count.csv
 
-gzip -d -c "$2" |
+echo processing tag...
+zcat "$2" |
   grep -E '^\(.*\)[,;]$' |
   tr -d "(); " |
   sed 's![,;]$!!' |
   sort -n > tid_tag.csv
 
+echo compressing tid-count in background...
 gzip tid_count.csv &
+echo compressing tid-tag in background...
 gzip tid_tag.csv &
+
+echo merging tid-count-tag...
+join -t , tid_count.csv tid_tag.csv > tid_count_tag.csv
+
+echo compressing tid-count in background...
+gzip tid_count_tag.csv &
