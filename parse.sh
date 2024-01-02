@@ -12,6 +12,7 @@ gzip -d -c "$1" |
   sort -n -r |
   uniq -c |
   sed 's/^\s*//g;s/ /,/' |
-  sort -n -r > count_tid.csv
+  sort -n -r |
+  awk -F, '{ print $2 "," $1 }' > tid_count.csv
 
-gzip count_tid.csv
+gzip tid_count.csv
