@@ -21,8 +21,8 @@ zcat "$1" |
 echo processing tag...
 zcat "$2" |
   grep -E '^\(.*\)[,;]$' |
-  tr -d "(); " |
-  sed 's![,;]$!!' |
+  tr -d "();" |
+  sed 's![,;]$!!;s!, !,!' |
   sort -n > tid_tag.csv
 
 echo compressing tid-count in background...
