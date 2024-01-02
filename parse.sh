@@ -12,6 +12,6 @@ gzip -d -c "$1" |
   sort -n -r |
   uniq -c |
   sed 's/^\s*//g;s/ /,/' |
-  sort -n -r > gid_tid.csv
+  sort -n -r > count_tid.csv
 
-gzip gid_tid.csv
+gzip count_tid.csv
