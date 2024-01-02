@@ -8,4 +8,4 @@ tagdb = { item['namespace']: item['data'] for item in tagdb if not item['namespa
 for namespace, tags in tagdb.items():
     for tag, info in tags.items():
         full_tag = f"{namespace}:{tag}"
-        print(full_tag, info['name'], json.dumps(info['intro'], ensure_ascii=False), sep=',')
+        print(f"'{full_tag}'", f"'{info['name']}'", f"'{info['intro'].replace('\n', '\\n')}'", sep=',')
