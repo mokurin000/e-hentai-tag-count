@@ -2,7 +2,7 @@ if ! [[ -z $1 ]]
 then exit 1
 fi
 
-output_file=${1%.sql.gz}.csv
+output_file=gid_tid.csv
 
 gzip -d -c "$1" |
   rg '^\(.*\)[,;]$' |
@@ -12,6 +12,6 @@ gzip -d -c "$1" |
   sort -n -r |
   uniq -c |
   sed 's/^\s*//g;s/ /,/' |
-  sort -n -r > "${output_file}"
+  sort -n -r > gid_tid.csv
 
-gzip "${output_file}"
+gzip gid_tid.csv
