@@ -15,8 +15,8 @@ zcat "$1" |
   sort -n -r |
   uniq -c |
   sed 's/^\s*//g;s/ /,/' |
-  awk -F, '{ print $2 "," $1 }'
-  sort -n | > tid_count.csv
+  awk -F, '{ print $2 "," $1 }' |
+  sort -n > tid_count.csv
 
 echo processing tag...
 zcat "$2" |
