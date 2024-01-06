@@ -6,8 +6,14 @@ fi
 
 output_file=gid_tid.csv
 
+gzip -d $1 -k
+tag_file=${1%.gz}
+
+echo applying tag rename workaround...
+sh workaround.sh "${tag_file}"
+
 echo processing gid-tid...
-zcat "$1" |
+cat "${tag_file}" |
   grep -E '^\(.*\)[,;]$' |
   tr -cd '[0-9] \n' |
   grep -v '^$' |
