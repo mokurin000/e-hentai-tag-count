@@ -6,6 +6,12 @@ then
     exit 1
 fi
 
+replace = 's/, 10395)/, 138085)/;'
+
+# generated part start
+source slave-master-replace.sh
+# generated part end
+
 sed -i \
-  's/, 10395)/, 138085)/' \
+  "$replace" \
   "$1"
