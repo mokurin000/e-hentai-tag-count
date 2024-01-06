@@ -6,24 +6,26 @@ fi
 
 output_file=gid_tid.csv
 
-gzip -d $1 -k -f
-tag_file=${1%.gz}
-
-echo applying tag rename workaround...
-sh workaround.sh "${tag_file}"
 
 (
 	echo start processing gid-tid...
-	cat "${tag_file}" |
-	  grep -E '^\(.*\)[,;]$' |
-	  tr -cd '[0-9] \n' |
-	  grep -v '^$' |
-	  awk -F" " '{ print $2 }' |
-	  sort -n -r |
-	  uniq -c |
-	  sed 's/^\s*//g;s/ /,/' |
-	  awk -F, '{ print $2 "," $1 }' |
-	  sort -k 1b,1 -t ',' > tid_count.csv &
+	(
+		zcat "$1" |
+		grep -E '^\(.*\)[,;]$' |
+		tr -cd '[0-9] \n' |
+		grep -v '^$' |
+		awk -F" " '{ print $2 }' |
+		sort -n -r |
+		uniq -c |
+		sed 's/^\s*//g;s/ /,/' |
+		awk -F, '{ print $2 "," $1 }' |
+		sort -k 1 -n -t ',' > tid_count.csv
+
+		echo applying tag rename workaround...
+		python slave-merge.py tid_count.csv
+		
+		sort -k 1b,1 -t ',' -o tid_count.csv tid_count.csv
+	) &
 	 
 	echo start processing tag...
 	zcat "$2" |
