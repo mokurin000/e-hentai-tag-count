@@ -6,7 +6,7 @@ with open("db.text.json", encoding="utf-8") as f:
 tagdb = {
     item["namespace"]: item["data"]
     for item in tagdb
-    if not item["namespace"] in ["rows", "reclass"]
+    if not item["namespace"] in ["rows"]
 }
 
 with open("tag_name_intro.csv", encoding="utf-8", mode="w+") as o:
