@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-if [ $# != 1 ]:
+if [ $# != 1 ]
 then
     echo "Usage: $0 [gid-tid.sql]"
     exit 1
