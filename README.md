@@ -6,3 +6,7 @@ ehtid: 可以通过[该页面](https://repo.e-hentai.org/tools/taggroup)获取�
 
 > 也发现有标签直接重命名...
 > `how to` -> `o:how to`
+
+## Credit
+
+[ccloli/e-hentai-db](https://github.com/ccloli/e-hentai-db) 提供了画廊-标签的映射关系
