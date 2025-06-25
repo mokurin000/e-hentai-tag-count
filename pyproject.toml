@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "asyncmy>=0.2.10",
+    "connectorx>=0.4.3",
+    "polars>=1.31.0",
+    "pyarrow>=20.0.0",
     "python-dotenv>=1.1.1",
-    "sqlalchemy[asyncio]>=2.0.41",
+    "sqlalchemy>=2.0.41",
 ]

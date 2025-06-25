@@ -7,5 +7,17 @@ Now this WIP branch try to make the project reasonable and reproducible.
 ## Roadmap
 
 [x] import sql backup
+[x] export new `tag-count` format, because tid itself is meaningless.
 [ ] download slave-master relationship
-[ ] export new `tag-count` format, because tid itself is meaningless.
+
+## Format
+
+- `tagname_count.csv`:
+  - not quoted
+  - seperator: `,`
+  - with header line
+- `tid_count_tag.csv`:
+  - partially backward compatible
+  - `tid` is always empty after `2025-01-08` release.
+  - quoted using `'`
+  - without header line

@@ -1,12 +1,14 @@
+import gzip
 import asyncio
-from dataclasses import dataclass
+import pickle
+from io import BytesIO
 from os import environ
+from dataclasses import dataclass
 
-
+import polars as pl
 from dotenv import load_dotenv
 from sqlalchemy import String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 load_dotenv()
 
@@ -42,24 +44,78 @@ class Tag(Base):
         return f"Tag(id={self.id}, name='{self.name}')"
 
 
+def save_gz(io: BytesIO, filename: str):
+    io.seek(0)
+
+    with gzip.open(filename, mode="wb") as f:
+        f.write(io.read())
+
+
 async def main():
-    engine = create_async_engine(
-        f"mysql+asyncmy://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}",
-        echo=True,
+    uri = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+
+    gid_tid = pl.read_database_uri(
+        str(select(GidTid.tid)),
+        uri=uri,
+        engine="connectorx",
     )
-    engine.execution_options(stream_results=True)
+    tags = pl.read_database_uri(
+        str(select(Tag)),
+        uri=uri,
+        engine="connectorx",
+    ).lazy()
 
-    async with AsyncSession(engine) as session:
-        result = await session.execute(select(GidTid).limit(1000))
+    # slave-master mapping
+    with open("smmap.pickle", "rb") as f:
+        smmap: dict[str, str] = pickle.load(f)
 
-        print("query end")
+    result = (
+        gid_tid.lazy()
+        .join(
+            tags.rename(
+                {
+                    "id": "tid",
+                    "name": "tag_name",
+                }
+            ),
+            on="tid",
+            how="left",
+        )
+        .drop(pl.col("tid"))
+        .with_columns(
+            pl.col("tag_name").map_elements(
+                lambda tag: smmap[tag] if tag in smmap else tag,
+                strategy="threading",
+                return_dtype=pl.String,
+            )
+        )
+        .group_by(pl.col("tag_name"))
+        .len()
+        .collect()
+    )
 
-        for item in result.scalars():
-            print(item)
+    output = BytesIO()
+    result.write_csv(
+        file=output,
+    )
+    save_gz(
+        io=output,
+        filename="tagname_count.csv.gz",
+    )
 
-        result = await session.execute(select(Tag))
-        for item in result.scalars():
-            print(item)
+    output_legacy = BytesIO()
+    result_legacy = result.with_columns(pl.lit(None).alias("tid"))
+    result_legacy = result_legacy.select(["tid", "len", "tag_name"])
+    result_legacy.write_csv(
+        file=output_legacy,
+        quote_char="'",
+        quote_style="non_numeric",
+        include_header=False,
+    )
+    save_gz(
+        io=output_legacy,
+        filename="tid_count_tag.csv.gz",
+    )
 
 
 if __name__ == "__main__":
