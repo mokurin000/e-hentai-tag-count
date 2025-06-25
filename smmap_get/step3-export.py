@@ -47,7 +47,7 @@ async def main():
         maps = pool.map(extract_tags, tag_group_read)
 
     result = reduce(lambda a, b: a | b, maps)
-    with open("smmap.pickle", "wb") as f:
+    with open(dump_output, "wb") as f:
         pickle.dump(result, f)
     print(f"exported {len(result)} relationships")
 
