@@ -9,6 +9,7 @@ from aiohttp import ClientSession, CookieJar
 src_dir = Path(__file__).parent.absolute()
 cookie_path = src_dir.joinpath("repo.e-hentai.org_cookies.txt")
 groups_txt = src_dir.joinpath("groups.txt")
+group_dir = src_dir.joinpath("groups")
 
 cookiejar = MozillaCookieJar(filename=cookie_path)
 cookiejar.load()
@@ -48,9 +49,12 @@ async def main():
 
     with open(groups_txt, "w", encoding="utf-8") as f:
         for group_url in groups:
+            filename = f"taggroup-{hash(group_url) % 0x100000000:08x}.html"
+            if group_dir.joinpath(filename).exists():
+                continue
             print(
                 f"""{group_url}
-    out=taggroup-{hash(group_url) % 0x100000000:08x}.html
+    out={filename}
     continue=true""",
                 file=f,
             )
