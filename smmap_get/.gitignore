@@ -1,1 +1,4 @@
-*_cookies.txt
+*.txt
+
+/groups
+/aria2.session
