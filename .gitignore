@@ -1,0 +1,5 @@
+*.sql
+*.db
+*.gz
+*.pyc
+*.pickle
