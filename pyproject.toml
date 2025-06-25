@@ -9,6 +9,7 @@ dependencies = [
     "aiohttp>=3.12.13",
     "beautifulsoup4>=4.13.4",
     "connectorx>=0.4.3",
+    "loguru>=0.7.3",
     "polars>=1.31.0",
     "pyarrow>=20.0.0",
     "python-dotenv>=1.1.1",

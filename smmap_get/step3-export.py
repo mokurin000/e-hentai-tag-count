@@ -49,6 +49,7 @@ async def main():
     result = reduce(lambda a, b: a | b, maps)
     with open("smmap.pickle", "wb") as f:
         pickle.dump(result, f)
+    print(f"exported {len(result)} relationships")
 
 
 if __name__ == "__main__":

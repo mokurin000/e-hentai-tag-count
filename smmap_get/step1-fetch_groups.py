@@ -2,8 +2,9 @@ import asyncio
 from pathlib import Path
 from http.cookiejar import MozillaCookieJar
 
-from aiohttp import ClientSession, CookieJar
+from loguru import logger
 from bs4 import BeautifulSoup
+from aiohttp import ClientSession, CookieJar
 
 src_dir = Path(__file__).parent.absolute()
 cookie_path = src_dir.joinpath("repo.e-hentai.org_cookies.txt")
@@ -24,6 +25,7 @@ async def tag_groups(session: ClientSession) -> list[str]:
     documents = []
 
     for category in range(2, 11 + 1):
+        logger.info(f"scraping category {category}")
         async with session.get(
             f"https://repo.e-hentai.org/tools/taggroup?show={category}",
         ) as resp:
@@ -45,7 +47,13 @@ async def main():
         groups = await tag_groups(session=session)
 
     with open(groups_txt, "w", encoding="utf-8") as f:
-        print(*groups, sep="\n", file=f)
+        for group_url in groups:
+            print(
+                f"""{group_url}
+    out=taggroup-{hash(group_url) % 0x100000000:08x}.html
+    continue=true""",
+                file=f,
+            )
 
 
 if __name__ == "__main__":
