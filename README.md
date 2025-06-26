@@ -2,13 +2,7 @@
 
 Because `ccloli` lost data for months, he hasn't dump his database for years.
 
-Now this WIP branch try to make the project reasonable and reproducible.
-
-## Roadmap
-
-[x] import sql backup
-[x] export new `tag-count` format, because tid itself is meaningless.
-[ ] download slave-master relationship
+This branch still inherites from e-hentai-db database architecture, but have even better performance, and much easier to reproduce.
 
 ## Format
 
