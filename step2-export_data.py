@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from sqlalchemy import String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+from manual_fix import TAG_GROUP_MAP
+
 load_dotenv()
 
 DB_USER = environ.get("DB_USER", "root")
@@ -51,6 +53,11 @@ def save_gz(io: BytesIO, filename: str):
         f.write(io.read())
 
 
+def process_pair(pair: tuple[str, str]) -> tuple[str, str]:
+    tag, group = pair
+    return (tag, f"{group}:{tag}")
+
+
 async def main():
     uri = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
@@ -68,6 +75,13 @@ async def main():
     # slave-master mapping
     with open("smmap.pickle", "rb") as f:
         smmap: dict[str, str] = pickle.load(f)
+
+    smmap.update(
+        map(
+            process_pair,
+            TAG_GROUP_MAP.items(),
+        )
+    )
 
     result = (
         gid_tid.lazy()
