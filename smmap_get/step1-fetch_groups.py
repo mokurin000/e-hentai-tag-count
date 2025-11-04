@@ -52,7 +52,7 @@ async def main():
     current_files = set(listdir(group_dir))
     with open(groups_txt, "w", encoding="utf-8") as f:
         for group_url in groups:
-            filename = f"taggroup-{hashlib.md5(group_url.encode('utf-8')).digest().decode():8}.html"
+            filename = f"taggroup-{hashlib.md5(group_url.encode('utf-8')).hexdigest()[:8]}.html"
             if filename in current_files:
                 continue
             print(
