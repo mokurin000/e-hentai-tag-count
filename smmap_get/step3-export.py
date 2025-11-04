@@ -3,6 +3,7 @@ import pickle
 
 from os import listdir
 from pathlib import Path
+from asyncio import Semaphore
 from functools import reduce
 from multiprocessing import Pool
 from urllib.parse import urlparse, ParseResult
@@ -13,10 +14,12 @@ from bs4 import BeautifulSoup, Tag
 groups_dir = Path(__file__).parent.joinpath("groups").absolute()
 dump_output = Path(__file__).parent.joinpath("smmap.pickle").absolute()
 
+READFILE_SEM = Semaphore(1024)
 
 async def read_file(file_path: Path) -> str:
-    async with async_open(file_path, mode="r", encoding="utf-8") as f:
-        content = await f.read()
+    async with READFILE_SEM:
+        async with async_open(file_path, mode="r", encoding="utf-8") as f:
+            content = await f.read()
     return content
 
 
