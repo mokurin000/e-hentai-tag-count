@@ -73,7 +73,7 @@ async def main():
     ).lazy()
 
     # slave-master mapping
-    with open("smmap.pickle", "rb") as f:
+    with open("smmap_get/smmap.pickle", "rb") as f:
         smmap: dict[str, str] = pickle.load(f)
 
     smmap.update(
@@ -84,8 +84,7 @@ async def main():
     )
 
     result = (
-        gid_tid
-        .join(
+        gid_tid.join(
             tags.rename(
                 {
                     "id": "tid",

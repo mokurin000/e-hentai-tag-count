@@ -1,4 +1,6 @@
 import asyncio
+import hashlib
+from os import listdir
 from pathlib import Path
 from http.cookiejar import MozillaCookieJar
 
@@ -47,10 +49,11 @@ async def main():
     ) as session:
         groups = await tag_groups(session=session)
 
+    current_files = set(listdir(group_dir))
     with open(groups_txt, "w", encoding="utf-8") as f:
         for group_url in groups:
-            filename = f"taggroup-{hash(group_url) % 0x100000000:08x}.html"
-            if group_dir.joinpath(filename).exists():
+            filename = f"taggroup-{hashlib.md5(group_url.encode('utf-8')).digest().decode():8}.html"
+            if filename in current_files:
                 continue
             print(
                 f"""{group_url}
