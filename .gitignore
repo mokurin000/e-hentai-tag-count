@@ -1,4 +1,4 @@
-*.sql
+nightly.sql*
 *.db
 *.gz
 *.pyc
