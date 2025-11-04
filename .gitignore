@@ -5,3 +5,5 @@
 *.pickle
 
 .env
+
+/manual_fix.py

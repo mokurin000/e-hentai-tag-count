@@ -1,6 +1,7 @@
 import gzip
 import asyncio
 import pickle
+from sys import argv
 from io import BytesIO
 from os import environ
 from dataclasses import dataclass
@@ -76,12 +77,13 @@ async def main():
     with open("smmap_get/smmap.pickle", "rb") as f:
         smmap: dict[str, str] = pickle.load(f)
 
-    smmap.update(
-        map(
-            process_pair,
-            TAG_GROUP_MAP.items(),
+    if "--first-run" not in argv:
+        smmap.update(
+            map(
+                process_pair,
+                TAG_GROUP_MAP.items(),
+            )
         )
-    )
 
     result = (
         gid_tid.join(

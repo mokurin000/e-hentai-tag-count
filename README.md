@@ -6,7 +6,15 @@ Second, you need to fetch tag groups by `smmap_get`, and it might take hours.
 
 Then you could export smmap.pickle, and import the [e-hentai-db sql backup](https://github.com/URenko/e-hentai-db/releases/tag/nightly).
 
-Finally you get to `step2-export_data.py`, and you should use the `step3-manual_fix.py` to re-export the manual fix of missing group prefix, then run step 2 again.
+Finally:
+
+```bash
+uv run step2-export_data.py --first-run
+uv run step3-manual_fix.py
+uv run step2-export_data.py
+```
+
+That's it.
 
 ## Data clean
 
