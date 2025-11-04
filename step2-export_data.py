@@ -65,7 +65,7 @@ async def main():
         str(select(GidTid.tid)),
         uri=uri,
         engine="connectorx",
-    )
+    ).lazy()
     tags = pl.read_database_uri(
         str(select(Tag)),
         uri=uri,
@@ -84,7 +84,7 @@ async def main():
     )
 
     result = (
-        gid_tid.lazy()
+        gid_tid
         .join(
             tags.rename(
                 {

@@ -1,8 +1,18 @@
 # e-hentai-tag-count
 
-Because `ccloli` lost data for months, he hasn't dump his database for years.
+First you should export your cookies of e-hentai.org (with `Get Cookies.txt LOCALLY`) to `smmap_get/repo.e-hentai.org_cookies.txt`. Netescape format is needed.
 
-This branch still inherites from e-hentai-db database architecture, but have even better performance, and much easier to reproduce.
+Second, you need to fetch tag groups by `smmap_get`, and it might take hours.
+
+Then you could export smmap.pickle, and import the [e-hentai-db sql backup](https://github.com/URenko/e-hentai-db/releases/tag/nightly).
+
+Finally you get to `step2-export_data.py`, and you should use the `step3-manual_fix.py` to re-export the manual fix of missing group prefix, then run step 2 again.
+
+## Data clean
+
+`smmap` introduced slave-master tag fix, by replacing every slave tag to the master tag.
+
+`manual_fix.py` finds the case a tag has only one prefix existing, for example `otaku` and `male:otaku` makes `otaku` a subtag of `male:otaku` if `female:otaku` does not exists.
 
 ## Format
 
