@@ -1,5 +1,4 @@
 import gzip
-import asyncio
 import pickle
 from sys import argv
 from io import BytesIO
@@ -58,7 +57,7 @@ def process_pair(pair: tuple[str, str]) -> tuple[str, str]:
     return (tag, f"{group}:{tag}")
 
 
-async def main():
+def main():
     uri = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
 
     gid_tid = pl.read_database_uri(
@@ -129,4 +128,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
