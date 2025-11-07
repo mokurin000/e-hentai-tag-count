@@ -1,0 +1,60 @@
+name: Data Export and Release
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *' # 04:00 a.m. UTC daily
+permissions:
+  contents: write
+jobs:
+  data-export-and-release:
+    runs-on: ubuntu-latest
+    env:
+      DB_NAME: e-hentai-db
+      NIGHTLY_URL: https://github.com/URenko/e-hentai-db/releases/download/nightly/nightly.sql.zstd
+      SMMAP_URL: https://github.com/user-attachments/files/23346722/smmap.pickle.gz
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install project dependencies
+        run: uv sync
+      - name: Install MySQL and zstd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server zstd gzip
+      - name: Start MySQL Service
+        run: sudo service mysql start
+      - name: Download and decompress nightly.sql.zstd
+        run: |
+          curl -L "$NIGHTLY_URL" -o nightly.sql.zstd
+          zstd -d -f nightly.sql.zstd -o nightly.sql
+      - name: Create ${{ env.DB_NAME }} database and import nightly
+        run: |
+          mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`${{ env.DB_NAME }}\`;"
+          mysql -u root ${{ env.DB_NAME }} < perf.sql
+      - name: Download and decompress smmap.pickle.gz
+        run: |
+          mkdir -p smmap_get
+          curl -L "$SMMAP_URL" -o smmap_get/smmap.pickle.gz
+          gzip -dc smmap_get/smmap.pickle.gz > smmap_get/smmap.pickle
+      - name: Run data export scripts
+        run: |
+          uv run step2-export_data.py --first-run
+          uv run step3-manual_fix.py
+          uv run step2-export_data.py
+      - name: Check output files
+        run: ls -l tagname_count.csv.gz tid_count_tag.csv.gz
+      - name: Compute Release Tag
+        id: tag
+        run: echo "tag=v$(date '+%Y.%m.%d')" >> $GITHUB_OUTPUT
+      - name: Create GitHub Release and upload artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Automated Data Release ${{ steps.tag.outputs.tag }}
+          draft: false
+          prerelease: false
+          files: |
+            tagname_count.csv.gz
+            tid_count_tag.csv.gz
