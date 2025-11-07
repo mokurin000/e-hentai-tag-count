@@ -19,12 +19,8 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install project dependencies
         run: uv sync
-      - name: Install Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mysql-server zstd gzip aria2
       - name: Start MySQL Service
-        run: sudo service mysql start
+        run: sudo systemctl start mysql.service
       - name: Download and decompress nightly.sql.zstd
         run: |
           aria2c -x 16 -s 32 "$NIGHTLY_URL" -o nightly.sql.zstd
