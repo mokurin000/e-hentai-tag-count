@@ -19,15 +19,15 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install project dependencies
         run: uv sync
-      - name: Install MySQL and zstd
+      - name: Install Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y mysql-server zstd gzip
+          sudo apt-get install -y mysql-server zstd gzip aria2
       - name: Start MySQL Service
         run: sudo service mysql start
       - name: Download and decompress nightly.sql.zstd
         run: |
-          curl -L "$NIGHTLY_URL" -o nightly.sql.zstd
+          aria2c -x 16 -s 32 "$NIGHTLY_URL" -o nightly.sql.zstd
           zstd -d -f nightly.sql.zstd -o nightly.sql
       - name: Create ${{ env.DB_NAME }} database and import nightly
         run: |
