@@ -12,7 +12,6 @@ jobs:
       DB_NAME: e-hentai-db
       NIGHTLY_URL: https://github.com/URenko/e-hentai-db/releases/download/nightly/nightly.sql.zstd
       SMMAP_URL: https://github.com/user-attachments/files/23346722/smmap.pickle.gz
-      MYSQL_ROOT_PASSWORD: root
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,8 +31,8 @@ jobs:
           zstd -d -f nightly.sql.zstd -o nightly.sql
       - name: Create ${{ env.DB_NAME }} database and import nightly
         run: |
-          mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`${{ env.DB_NAME }}\`;"
-          mysql -u root ${{ env.DB_NAME }} < perf.sql
+          mysql --password=root --user=root -e "CREATE DATABASE IF NOT EXISTS \`${{ env.DB_NAME }}\`;"
+          mysql --password=root --user=root ${{ env.DB_NAME }} < perf.sql
       - name: Download and decompress smmap.pickle.gz
         run: |
           mkdir -p smmap_get
