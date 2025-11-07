@@ -31,8 +31,8 @@ jobs:
           zstd -d -f nightly.sql.zstd -o nightly.sql
       - name: Create ${{ env.DB_NAME }} database and import nightly
         run: |
-          mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`${{ env.DB_NAME }}\`;"
-          mysql -u root ${{ env.DB_NAME }} < perf.sql
+          sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`${{ env.DB_NAME }}\`;"
+          sudo mysql -u root ${{ env.DB_NAME }} < perf.sql
       - name: Download and decompress smmap.pickle.gz
         run: |
           mkdir -p smmap_get
