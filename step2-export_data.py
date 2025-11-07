@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from sqlalchemy import String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from manual_fix import TAG_GROUP_MAP
 
 load_dotenv()
 
@@ -78,6 +77,8 @@ async def main():
         smmap: dict[str, str] = pickle.load(f)
 
     if "--first-run" not in argv:
+        from manual_fix import TAG_GROUP_MAP
+
         smmap.update(
             map(
                 process_pair,
