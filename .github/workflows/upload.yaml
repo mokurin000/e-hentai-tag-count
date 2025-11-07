@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_NAME: e-hentai-db
+      DB_HOST: 127.0.0.1:3306
       NIGHTLY_URL: https://github.com/URenko/e-hentai-db/releases/download/nightly/nightly.sql.zstd
       SMMAP_URL: https://github.com/user-attachments/files/23346722/smmap.pickle.gz
     steps:
