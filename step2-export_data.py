@@ -98,13 +98,7 @@ async def main():
             how="left",
         )
         .drop(pl.col("tid"))
-        .with_columns(
-            pl.col("tag_name").map_elements(
-                lambda tag: smmap[tag] if tag in smmap else tag,
-                strategy="threading",
-                return_dtype=pl.String,
-            )
-        )
+        .with_columns(pl.col("tag_name").replace(smmap))
         .group_by(pl.col("tag_name"))
         .len()
         .collect()
