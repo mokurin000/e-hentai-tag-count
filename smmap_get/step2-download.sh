@@ -2,6 +2,8 @@
 
 cd $(dirname $0)
 
+grep -lR "This IP address has been temporarily banned due to an excessive request rate" ./groups | xargs rm
+
 aria2c -s 1 -j 3 \
     --load-cookies=repo.e-hentai.org_cookies.txt \
     --save-session=aria2.session \
