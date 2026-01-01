@@ -1,5 +1,15 @@
 # e-hentai-tag-count
 
+## fix incorrect aliases
+
+This was fixed in `266cc341`, releases until v2026.01.01
+
+> `male:netori` is like [`male:minotaur`](https://repo.e-hentai.org/tools/taggroup?mastertag=16440), but not existing in official master tag relationship.
+
+You could check the `data/legacy_fix.csv` for migration.
+
+## manual export
+
 First you should export your cookies of e-hentai.org (with `Get Cookies.txt LOCALLY`) to `smmap_get/repo.e-hentai.org_cookies.txt`. Netescape format is needed.
 
 Second, you need to fetch tag groups by `smmap_get`, and it might take hours.
