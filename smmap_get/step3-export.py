@@ -16,6 +16,7 @@ dump_output = Path(__file__).parent.joinpath("smmap.pickle").absolute()
 
 READFILE_SEM = Semaphore(1024)
 
+
 async def read_file(file_path: Path) -> str:
     async with READFILE_SEM:
         async with async_open(file_path, mode="r", encoding="utf-8") as f:
@@ -34,10 +35,14 @@ def extract_tags(document: str) -> dict[str, str]:
         features="html.parser",
     )
 
-    tags = list(map(tag_real_name, soup.select("td > a")))
-
-    master = tags[0]
-    slaves = tags[1:]
+    attrs = soup.select("tr > td:nth-child(1)")
+    tags = list(map(tag_real_name, soup.select("tr > td:nth-child(3) > a")))
+    for attr, tagname in zip(attrs, tags):
+        if attr.text != "M":
+            continue
+        master = tagname
+        tags.remove(master)
+    slaves = tags
 
     return {slave: master for slave in slaves}
 
