@@ -2,7 +2,7 @@
 
 ## fix incorrect aliases
 
-This was fixed in `266cc341`, releases until v2026.01.01
+This was fixed in `266cc341`, releases until v2026.01.01 were affected.
 
 > `male:netori` is like [`male:minotaur`](https://repo.e-hentai.org/tools/taggroup?mastertag=16440), but not existing in official master tag relationship.
 
