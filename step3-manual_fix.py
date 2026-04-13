@@ -7,10 +7,14 @@ import gzip
 def main():
     with gzip.open("tagname_count.csv.gz", mode="rb") as csv_file:
         csv = csv_file.read()
-    tags: set[str] = set(pl.read_csv(csv, encoding="utf-8")["tag_name"])
+    tag_names = pl.read_csv(csv, encoding="utf-8")["tag_name"]
+    tags: set[str] = set(tag_names.filter(tag_names.is_not_null()))
     result: dict[str, list[str]] = {}
 
     for tag in tags:
+        if tag is None:
+            print("error: None tag")
+            continue
         if ":" not in tag:
             result[tag] = []
 
@@ -28,14 +32,12 @@ def main():
         for orphan, groups in sorted(result.items()):
             match len(groups):
                 case 1:
-                    print(f"    {orphan.__repr__()}: {groups[0].__repr__()},",
-                          file=f)
+                    print(f"    {orphan.__repr__()}: {groups[0].__repr__()},", file=f)
                 case 0:
                     # real orphan, don't touch
                     pass
                 case _:
-                    print(f"[ignored] multi group: {orphan} -> {groups}",
-                          file=stderr)
+                    print(f"[ignored] multi group: {orphan} -> {groups}", file=stderr)
 
         print("}", file=f)
 

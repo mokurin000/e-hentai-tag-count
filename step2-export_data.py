@@ -2,21 +2,11 @@ import gzip
 import pickle
 from sys import argv
 from io import BytesIO
-from os import environ
 from dataclasses import dataclass
 
 import polars as pl
-from dotenv import load_dotenv
 from sqlalchemy import String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
-
-load_dotenv()
-
-DB_USER = environ.get("DB_USER", "root")
-DB_PASS = environ.get("DB_PASS", "root")
-DB_HOST = environ.get("DB_HOST", "localhost")
-DB_NAME = environ.get("DB_NAME", "e-hentai-db")
 
 
 class Base(DeclarativeBase):
@@ -58,7 +48,7 @@ def process_pair(pair: tuple[str, str]) -> tuple[str, str]:
 
 
 def main():
-    uri = f"mysql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
+    uri = "sqlite://e-hentai.db"
 
     gid_tid = pl.read_database_uri(
         str(select(GidTid.tid)),

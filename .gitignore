@@ -1,5 +1,4 @@
-nightly.sql*
-*.db
+/e-hentai.db*
 *.gz
 *.pyc
 *.pickle

@@ -11,7 +11,6 @@ dependencies = [
     "connectorx>=0.4.3",
     "loguru>=0.7.3",
     "polars>=1.31.0",
-    "pyarrow>=20.0.0",
-    "python-dotenv>=1.1.1",
+    "pyarrow>=23.0.1",
     "sqlalchemy>=2.0.41",
 ]
