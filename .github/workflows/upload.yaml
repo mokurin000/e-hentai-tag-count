@@ -2,7 +2,7 @@ name: Data Export and Release
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 4 * * *' # 04:00 a.m. UTC daily
+    - cron: '0 * * * *' # Every hour
 permissions:
   contents: write
 jobs:
