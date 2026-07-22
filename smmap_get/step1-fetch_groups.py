@@ -49,7 +49,11 @@ async def main():
     ) as session:
         groups = await tag_groups(session=session)
 
-    current_files = set(listdir(group_dir))
+    if group_dir.exists():
+        current_files = set(listdir(group_dir))
+    else:
+        current_files = set()
+
     with open(groups_txt, "w", encoding="utf-8") as f:
         for group_url in groups:
             filename = f"taggroup-{hashlib.md5(group_url.encode('utf-8')).hexdigest()[:8]}.html"
