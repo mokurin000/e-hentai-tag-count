@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NIGHTLY_URL: https://github.com/URenko/e-hentai-db/releases/download/nightly/e-hentai.db.zstd
-      SMMAP_URL: https://github.com/user-attachments/files/24399975/smmap.pickle.gz
+      SMMAP_URL: https://github.com/user-attachments/files/30258717/smmap.pickle.gz
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
