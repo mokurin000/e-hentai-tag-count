@@ -102,20 +102,6 @@ def main():
         filename="tagname_count.csv.gz",
     )
 
-    output_legacy = BytesIO()
-    result_legacy = result.with_columns(pl.lit(None).alias("tid"))
-    result_legacy = result_legacy.select(["tid", "len", "tag_name"])
-    result_legacy.write_csv(
-        file=output_legacy,
-        quote_char="'",
-        quote_style="non_numeric",
-        include_header=False,
-    )
-    save_gz(
-        io=output_legacy,
-        filename="tid_count_tag.csv.gz",
-    )
-
 
 if __name__ == "__main__":
     main()

@@ -1,14 +1,6 @@
 # e-hentai-tag-count
 
-## fix incorrect aliases
-
-This was fixed in `266cc341`, releases until v2026.01.01 were affected.
-
-> `male:netori` is like [`male:minotaur`](https://repo.e-hentai.org/tools/taggroup?mastertag=16440), but not existing in official master tag relationship.
-
-You could check the `data/legacy_fix.csv` for migration.
-
-## manual export
+## Export smmap
 
 First you should export your cookies of e-hentai.org (with `Get Cookies.txt LOCALLY`) to `smmap_get/repo.e-hentai.org_cookies.txt`. Netescape format is needed.
 
@@ -16,7 +8,7 @@ Second, you need to fetch tag groups by `smmap_get`, and it might take hours.
 
 Then you could export smmap.pickle, and import the [e-hentai-db sql backup](https://github.com/URenko/e-hentai-db/releases/tag/nightly).
 
-Finally:
+## Export data
 
 ```bash
 uv run step2-export_data.py --first-run
@@ -28,7 +20,7 @@ That's it.
 
 ## Data clean
 
-`smmap` introduced slave-master tag fix, by replacing every slave tag to the master tag.
+`smmap` introduced slave-master tag fix, by replacing every slave tag with the master tag.
 
 `manual_fix.py` finds the case a tag has only one prefix existing, for example `otaku` and `male:otaku` makes `otaku` a subtag of `male:otaku` if `female:otaku` does not exists.
 
@@ -38,8 +30,4 @@ That's it.
   - not quoted
   - seperator: `,`
   - with header line
-- `tid_count_tag.csv`:
-  - partially backward compatible
-  - `tid` is always empty after `2025-01-08` release.
-  - quoted using `'`
-  - without header line
+
