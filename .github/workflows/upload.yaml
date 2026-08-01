@@ -33,7 +33,7 @@ jobs:
           uv run step3-manual_fix.py
           uv run step2-export_data.py
       - name: Check output files
-        run: ls -lh tagname_count.csv.gz tid_count_tag.csv.gz
+        run: ls -lh tagname_count.csv.gz
       - name: Compute Release Tag
         id: tag
         run: echo "tag=v$(date -u '+%Y.%m.%d-%H')" >> $GITHUB_OUTPUT
